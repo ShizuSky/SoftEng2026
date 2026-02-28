@@ -14,17 +14,16 @@ TEST(test_shape1, AddFunction)
     res = param.validate();
     ASSERT_NE(res, false);
 
-    IShape<float>* shape = ShapeFactory<float>::create(param);
+    auto shape = std::unique_ptr<IShape<float>>(ShapeFactory<float>::create(param));
     ASSERT_NE(shape, nullptr);
 
     ShapeResultData<float> data=shape->compute();
     float area=data.get(ShapeResultIndex::RESULT_AREA);
     ASSERT_NE(area, 0.f);
 
-    delete shape;
-    shape = nullptr;
+    shape.reset(nullptr);
 
-    ASSERT_EQ(shape, nullptr);
+    ASSERT_EQ(shape.get(), nullptr);
 }
 
 
