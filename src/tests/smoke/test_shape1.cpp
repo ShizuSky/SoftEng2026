@@ -37,16 +37,16 @@ int main(int argc, char** argv)
     // TST
     /*ShapeParam<double> param;
 
-    param.set(PARAM_RADIUS, 5.0);
-    param.set(PARAM_RADIUS_2, 2.0);
+    param.set_attrib(PARAM_RADIUS, 5.0);
+    param.set_attrib(PARAM_RADIUS_2, 2.0);
 
     Torus<double> torus(param);
 
-    ShapeResultData<double> result = torus.compute();
+    ShapeResult<double> result = torus.compute();
 
     cout << torus.print() << endl;
-    cout << "Volume: " << result.get(RESULT_VOLUME) << endl;
-    cout << "Surface: " << result.get(RESULT_SURFACE) << endl;
+    cout << "Volume: " << result.get_attrib(RESULT_VOLUME) << endl;
+    cout << "Surface: " << result.get_attrib(RESULT_SURFACE) << endl;
 
     return 0;*/
 }
