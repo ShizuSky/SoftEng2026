@@ -11,7 +11,7 @@ using namespace std;
 template<class T>
 class Rectangle : public Shape2D<T> {
   public:
-    inline virtual ShapeResultData<T> compute();
+    inline virtual ShapeResult<T> compute();
 
     inline string print();
 
