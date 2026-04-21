@@ -37,6 +37,11 @@ add_executable(test_shape1 src/tests/smoke/test_shape1.cpp)
 target_link_libraries(test_shape1 gtest gtest_main ShapeLib)
 target_include_directories(test_shape1 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src PRIVATE ${PROJECT_BINARY_DIR})
 
+add_executable(test_circle src/tests/smoke/test_circle.cpp)
+target_link_libraries(test_circle gtest gtest_main ShapeLib)
+target_include_directories(test_circle PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src PRIVATE ${PROJECT_BINARY_DIR})
+
+add_test(NAME test_circle COMMAND test_circle)
 add_test(NAME test_shape1 COMMAND test_shape1)
 #add_test(NAME test_shape2 COMMAND test_shape2)
 
