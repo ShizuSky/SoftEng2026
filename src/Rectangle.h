@@ -10,13 +10,13 @@ using namespace std;
 
 template <class T> class Rectangle : public Shape2D<T> {
 public:
-    inline virtual ShapeResultData<T> compute();
+    inline virtual ShapeResult<T> compute();
 
     inline string print();
 
     inline Rectangle(const ShapeParam<T>& param);
 };
-template <class T> inline ShapeResultData<T> Rectangle<T>::compute()
+template <class T> inline ShapeResult<T> Rectangle<T>::compute()
 {
 
     T a = this->param.getA();
@@ -25,7 +25,7 @@ template <class T> inline ShapeResultData<T> Rectangle<T>::compute()
     T area = a * b;
     T perimeter = 2 * (a + b);
 
-    return ShapeResultData<T>(area, perimeter);
+    return ShapeResult<T>(area, perimeter);
 }
 
 template <class T> inline string Rectangle<T>::print()
