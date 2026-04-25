@@ -14,7 +14,11 @@ permissions:
   pull-requests: write
 
 jobs:
+  # =========================================================================
+  # BUILD - kompilacja na Ubuntu i Windows
+  # =========================================================================
   build:
+    name: build
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -68,8 +72,44 @@ jobs:
     - name: Build
       run: cmake --build build
 
-    - name: Run tests
+    # Po udanym budowaniu na Ubuntu pakujemy katalog build/ jako artefakt,
+    # zeby kolejny job (test) mogl po nim odpalic ctest bez ponownej kompilacji.
+    # Pakujemy w tar, bo upload-artifact gubi atrybut wykonywalnosci plikow.
+    - name: Pack build directory (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
+      run: tar -czf build-ubuntu.tar.gz build/
+
+    - name: Upload build artifact (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-ubuntu
+        path: build-ubuntu.tar.gz
+        retention-days: 1
+
+  # =========================================================================
+  # TEST - uruchomienie testow na Ubuntu (osobny job, zaleznosc od build)
+  # =========================================================================
+  test:
+    name: test
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-ubuntu
+
+    - name: Unpack build directory
+      run: tar -xzf build-ubuntu.tar.gz
+
+    - name: Run tests
       working-directory: build
       run: ctest -C Debug --output-on-failure --verbose
       env:
@@ -80,11 +120,13 @@ jobs:
 
     - name: Publish Test Report
       uses: EnricoMi/publish-unit-test-result-action@v2
-      if: always() && matrix.os == 'ubuntu-latest'
+      if: always()
       with:
         files: "build/gtest_results_*.xml"
 
-
+  # =========================================================================
+  # FORMAT CHECK - niezalezny od build/test
+  # =========================================================================
   formatcheck:
     name: Check code format
     runs-on: ubuntu-22.04
